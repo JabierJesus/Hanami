@@ -14,7 +14,7 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const { addToCart } = useCart();
+  const { cart, addToCart } = useCart();
 
   const [selectedOption, setSelectedOption] = useState(
     product.options?.[0] || ""
@@ -22,6 +22,14 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const hasOptions = product.options && product.options.length > 0;
   const isOutOfStock = product.stock === 0;
+
+  const cartQuantity = cart
+    .filter((item) => item.product.id === product.id)
+    .reduce((total, item) => total + item.quantity, 0);
+
+  const maxReached = cartQuantity >= product.stock;
+
+  const isDisabled = isOutOfStock || maxReached;
 
   return (
     <article className="rounded-2xl border p-4">
@@ -75,7 +83,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
 
         <button
-          disabled={isOutOfStock}
+          disabled={isDisabled}
           onClick={() =>
             addToCart(
               product,
@@ -83,12 +91,16 @@ export default function ProductCard({ product }: ProductCardProps) {
             )
           }
           className={`mt-4 w-full rounded-full px-4 py-2 text-white ${
-            isOutOfStock
+            isDisabled
               ? "cursor-not-allowed bg-gray-300"
               : "bg-black"
           }`}
         >
-          {isOutOfStock ? "Agotado" : "Agregar"}
+          {isOutOfStock
+            ? "Agotado"
+            : maxReached
+            ? "Máximo disponible"
+            : "Agregar"}
         </button>
       </div>
     </article>

@@ -1,134 +1,114 @@
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabase-server";
+import { requireAdmin } from "@/lib/admin-auth";
 
 export async function POST(request: Request) {
+  const { authorized } = await requireAdmin();
+
+  if (!authorized) {
+    return NextResponse.json(
+      { error: "No autorizado" },
+      { status: 401 }
+    );
+  }
+
   try {
     const body = await request.json();
 
-    const { cart, total, paymentMethod } = body;
+    const {
+      cart,
+      paymentMethod,
+      locationId,
+      customerId,
+    } = body;
 
-    if (!cart?.length || !paymentMethod) {
+    if (!Array.isArray(cart) || cart.length === 0) {
       return NextResponse.json(
-        { error: "Faltan datos de la venta" },
+        { error: "El carrito esta vacio" },
         { status: 400 }
       );
     }
 
-    // Verificar stock
-    for (const item of cart) {
-      const { data: product, error } = await supabaseServer
-        .from("products")
-        .select("id, name, stock, active")
-        .eq("id", item.productId)
+    if (
+      paymentMethod !== "efectivo" &&
+      paymentMethod !== "transferencia"
+    ) {
+      return NextResponse.json(
+        { error: "Metodo de pago no valido" },
+        { status: 400 }
+      );
+    }
+
+    if (!locationId) {
+      return NextResponse.json(
+        { error: "Debes seleccionar un local" },
+        { status: 400 }
+      );
+    }
+
+    if (customerId) {
+      const {
+        data: customer,
+        error: customerError,
+      } = await supabaseServer
+        .from("customers")
+        .select("id")
+        .eq("id", customerId)
         .single();
 
-      if (error || !product) {
-        return NextResponse.json(
-          { error: `No se encontró el producto ${item.name}` },
-          { status: 400 }
-        );
-      }
-
-      if (!product.active) {
-        return NextResponse.json(
-          { error: `${product.name} no está disponible.` },
-          { status: 400 }
-        );
-      }
-
-      if (item.quantity > product.stock) {
+      if (customerError || !customer) {
         return NextResponse.json(
           {
-            error: `No hay suficiente stock de ${product.name}. Disponible: ${product.stock}.`,
+            error:
+              "El cliente seleccionado no existe",
           },
           { status: 400 }
         );
       }
     }
 
-    // Crear venta
-    const { data: order, error: orderError } = await supabaseServer
-      .from("orders")
-      .insert({
-        order_type: "presencial",
-        payment_method: paymentMethod,
-        total,
-        status: "completed",
-      })
-      .select()
-      .single();
-
-    if (orderError) {
-      console.error("ERROR CREANDO VENTA:", orderError);
-
-      return NextResponse.json(
-        { error: "No se pudo crear la venta" },
-        { status: 500 }
-      );
-    }
-
-    // Crear productos de la venta
-    const items = cart.map(
-      (item: {
-        productId: string;
-        name: string;
-        price: number;
-        quantity: number;
-      }) => ({
-        order_id: order.id,
-        product_id: item.productId,
-        product_name: item.name,
-        quantity: item.quantity,
-        unit_price: item.price,
-      })
+    const {
+      data,
+      error,
+    } = await supabaseServer.rpc(
+      "create_pos_order",
+      {
+        p_cart: cart,
+        p_payment_method: paymentMethod,
+        p_location_id: locationId,
+        p_customer_id:
+          customerId || null,
+      }
     );
 
-    const { error: itemsError } = await supabaseServer
-      .from("order_items")
-      .insert(items);
-
-    if (itemsError) {
-      console.error("ERROR GUARDANDO PRODUCTOS:", itemsError);
+    if (error) {
+      console.error(
+        "POS order error:",
+        error
+      );
 
       return NextResponse.json(
-        { error: "No se pudieron guardar los productos de la venta" },
-        { status: 500 }
+        {
+          error:
+            error.message ||
+            "No se pudo completar la venta",
+        },
+        { status: 400 }
       );
     }
 
-    // Descontar stock
-    for (const item of cart) {
-      const { data: product, error } = await supabaseServer
-        .from("products")
-        .select("stock")
-        .eq("id", item.productId)
-        .single();
-
-      if (error || !product) {
-        return NextResponse.json(
-          { error: "No se pudo actualizar el stock" },
-          { status: 500 }
-        );
-      }
-
-      await supabaseServer
-        .from("products")
-        .update({
-          stock: product.stock - item.quantity,
-        })
-        .eq("id", item.productId);
-    }
-
-    return NextResponse.json({
-      success: true,
-      orderId: order.id,
-      orderNumber: order.order_number,
-    });
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("ERROR INTERNO:", error);
+    console.error(
+      "POS API error:",
+      error
+    );
 
     return NextResponse.json(
-      { error: "Error interno del servidor" },
+      {
+        error:
+          "Error interno del servidor",
+      },
       { status: 500 }
     );
   }

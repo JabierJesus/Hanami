@@ -14,43 +14,41 @@ export async function GET() {
 
   try {
     const { data, error } = await supabaseServer
-      .from("orders")
-      .select(`
-        *,
-        customers (
-          name,
-          phone,
-          email
-        ),
-        order_items (
-          id,
-          product_id,
-          product_name,
-          quantity,
-          unit_price,
-          option
-        )
-      `)
-      .order("created_at", { ascending: false });
+      .from("categories")
+      .select(
+        "id, name, active, display_order, created_at"
+      )
+      .order("display_order", {
+        ascending: true,
+      });
 
     if (error) {
       console.error(
-        "ERROR CARGANDO PEDIDOS:",
+        "ERROR CARGANDO CATEGORIAS:",
         error
       );
 
       return NextResponse.json(
-        { error: "No se pudieron cargar los pedidos" },
+        {
+          error:
+            "No se pudieron cargar las categorias",
+        },
         { status: 500 }
       );
     }
 
     return NextResponse.json(data || []);
   } catch (error) {
-    console.error("ERROR INTERNO:", error);
+    console.error(
+      "ERROR INTERNO CARGANDO CATEGORIAS:",
+      error
+    );
 
     return NextResponse.json(
-      { error: "Error interno del servidor" },
+      {
+        error:
+          "Error interno cargando categorias",
+      },
       { status: 500 }
     );
   }
