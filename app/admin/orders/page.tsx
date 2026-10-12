@@ -453,22 +453,22 @@ export default function AdminOrders() {
   function getStatusClass(status: string) {
     switch (status) {
       case "pending":
-        return "bg-yellow-100 text-yellow-800";
+        return "border-yellow-800/60 bg-yellow-950/60 text-yellow-300";
 
       case "preparing":
-        return "bg-blue-100 text-blue-800";
+        return "border-blue-800/60 bg-blue-950/60 text-blue-300";
 
       case "ready":
-        return "bg-green-100 text-green-800";
+        return "border-green-800/60 bg-green-950/60 text-green-300";
 
       case "completed":
-        return "bg-gray-100 text-gray-800";
+        return "border-zinc-700 bg-zinc-800 text-zinc-300";
 
       case "cancelled":
-        return "bg-red-100 text-red-800";
+        return "border-red-800/60 bg-red-950/60 text-red-300";
 
       default:
-        return "bg-gray-100 text-gray-800";
+        return "border-zinc-700 bg-zinc-800 text-zinc-300";
     }
   }
 
@@ -479,9 +479,11 @@ export default function AdminOrders() {
 
   if (loading) {
     return (
-      <main className="px-6 py-12">
+      <main className="min-h-screen bg-zinc-950 px-6 py-12 text-zinc-100">
         <div className="mx-auto max-w-5xl">
-          <p>Cargando pedidos...</p>
+          <p className="text-zinc-400">
+            Cargando pedidos...
+          </p>
         </div>
       </main>
     );
@@ -489,15 +491,15 @@ export default function AdminOrders() {
 
   if (error) {
     return (
-      <main className="px-6 py-12">
+      <main className="min-h-screen bg-zinc-950 px-6 py-12 text-zinc-100">
         <div className="mx-auto max-w-5xl">
-          <p className="text-red-600">
+          <p className="text-red-400">
             {error}
           </p>
 
           <button
             onClick={loadOrders}
-            className="mt-4 rounded-lg bg-black px-4 py-2 text-white"
+            className="mt-4 rounded-xl bg-white px-4 py-2 font-semibold text-zinc-950 transition hover:bg-zinc-200"
           >
             Intentar nuevamente
           </button>
@@ -507,18 +509,17 @@ export default function AdminOrders() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 px-6 py-12">
+    <main className="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-100 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-5xl">
-
         {newOrderNumber !== null && (
-          <div className="mb-6 rounded-2xl border border-yellow-300 bg-yellow-100 p-5 shadow-sm">
+          <div className="mb-6 rounded-2xl border border-yellow-700/70 bg-yellow-950/50 p-5 shadow-lg shadow-yellow-950/20">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-lg font-bold text-yellow-900">
+                <p className="text-lg font-bold text-yellow-300">
                   🔔 ¡Nuevo pedido!
                 </p>
 
-                <p className="mt-1 text-sm text-yellow-800">
+                <p className="mt-1 text-sm text-yellow-200/80">
                   Pedido #HANAMI-{newOrderNumber} acaba de llegar.
                 </p>
               </div>
@@ -527,7 +528,7 @@ export default function AdminOrders() {
                 onClick={() =>
                   setNewOrderNumber(null)
                 }
-                className="rounded-xl bg-yellow-200 px-4 py-2 text-sm font-semibold text-yellow-900 hover:bg-yellow-300"
+                className="rounded-xl border border-yellow-700/60 bg-yellow-900/60 px-4 py-2 text-sm font-semibold text-yellow-200 transition hover:bg-yellow-800/70"
               >
                 Entendido
               </button>
@@ -535,19 +536,23 @@ export default function AdminOrders() {
           </div>
         )}
 
-        <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <h1 className="text-4xl font-bold">
+            <p className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
+              Hanami Admin
+            </p>
+
+            <h1 className="mt-2 text-4xl font-bold tracking-tight text-white">
               Pedidos Hanami
             </h1>
 
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-zinc-400">
               Gestiona los pedidos recibidos.
             </p>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label className="mb-2 block text-sm font-medium text-zinc-400">
               Local
             </label>
 
@@ -559,12 +564,13 @@ export default function AdminOrders() {
                 );
                 setNewOrderNumber(null);
               }}
-              className="rounded-xl border bg-white px-4 py-3 font-medium outline-none"
+              className="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 font-medium text-white outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-700"
             >
               {locations.map((location) => (
                 <option
                   key={location.id}
                   value={location.id}
+                  className="bg-zinc-900 text-white"
                 >
                   {location.name}
                 </option>
@@ -574,7 +580,7 @@ export default function AdminOrders() {
         </div>
 
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-zinc-500">
             {filteredOrders.length} pedido
             {filteredOrders.length !== 1
               ? "s"
@@ -585,14 +591,14 @@ export default function AdminOrders() {
             {soundEnabled ? (
               <button
                 onClick={disableSound}
-                className="rounded-xl border bg-white px-4 py-2 font-medium shadow-sm hover:bg-gray-50"
+                className="rounded-xl border border-green-800/60 bg-green-950/50 px-4 py-2 font-medium text-green-300 transition hover:bg-green-900/60"
               >
                 🔊 Sonidos activados
               </button>
             ) : (
               <button
                 onClick={enableSound}
-                className="rounded-xl bg-black px-4 py-2 font-medium text-white hover:bg-gray-800"
+                className="rounded-xl bg-white px-4 py-2 font-medium text-zinc-950 transition hover:bg-zinc-200"
               >
                 🔊 Activar sonidos
               </button>
@@ -601,14 +607,14 @@ export default function AdminOrders() {
             {notificationsEnabled ? (
               <button
                 onClick={disableNotifications}
-                className="rounded-xl border bg-white px-4 py-2 font-medium shadow-sm hover:bg-gray-50"
+                className="rounded-xl border border-green-800/60 bg-green-950/50 px-4 py-2 font-medium text-green-300 transition hover:bg-green-900/60"
               >
                 🔔 Notificaciones activadas
               </button>
             ) : (
               <button
                 onClick={enableNotifications}
-                className="rounded-xl bg-black px-4 py-2 font-medium text-white hover:bg-gray-800"
+                className="rounded-xl bg-white px-4 py-2 font-medium text-zinc-950 transition hover:bg-zinc-200"
               >
                 🔔 Activar notificaciones
               </button>
@@ -616,7 +622,7 @@ export default function AdminOrders() {
 
             <button
               onClick={loadOrders}
-              className="rounded-xl border bg-white px-4 py-2 font-medium shadow-sm hover:bg-gray-50"
+              className="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-2 font-medium text-zinc-200 shadow-sm transition hover:border-zinc-600 hover:bg-zinc-800"
             >
               Actualizar
             </button>
@@ -625,8 +631,8 @@ export default function AdminOrders() {
 
         <div className="space-y-5">
           {filteredOrders.length === 0 ? (
-            <div className="rounded-2xl border bg-white p-8 text-center">
-              <p className="text-gray-500">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-8 text-center">
+              <p className="text-zinc-500">
                 No hay pedidos para este local.
               </p>
             </div>
@@ -634,26 +640,26 @@ export default function AdminOrders() {
             filteredOrders.map((order) => (
               <div
                 key={order.id}
-                className="rounded-2xl border bg-white p-6 shadow-sm"
+                className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 shadow-lg shadow-black/20"
               >
                 <div className="flex flex-col justify-between gap-4 sm:flex-row">
                   <div>
-                    <p className="text-sm font-medium text-gray-500">
+                    <p className="text-sm font-medium text-zinc-500">
                       Pedido
                     </p>
 
-                    <h2 className="text-2xl font-bold">
+                    <h2 className="text-2xl font-bold text-white">
                       #HANAMI-{order.order_number}
                     </h2>
                   </div>
 
                   <div className="text-left sm:text-right">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-zinc-500">
                       Estado
                     </p>
 
                     <span
-                      className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${getStatusClass(
+                      className={`mt-1 inline-block rounded-full border px-3 py-1 text-sm font-semibold ${getStatusClass(
                         order.status
                       )}`}
                     >
@@ -666,33 +672,33 @@ export default function AdminOrders() {
 
                 <div className="mt-6 grid gap-4 sm:grid-cols-3">
                   <div>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-zinc-500">
                       Cliente
                     </p>
 
-                    <p className="font-semibold">
+                    <p className="font-semibold text-zinc-100">
                       {order.customers?.name ||
                         "Sin nombre"}
                     </p>
 
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-zinc-400">
                       {order.customers?.phone ||
                         "Sin teléfono"}
                     </p>
 
                     {order.customers?.email && (
-                      <p className="text-sm text-gray-600">
+                      <p className="break-all text-sm text-zinc-400">
                         {order.customers.email}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-zinc-500">
                       Tipo de pedido
                     </p>
 
-                    <p className="font-semibold">
+                    <p className="font-semibold text-zinc-100">
                       {order.order_type ===
                       "retiro"
                         ? "🏪 Retiro"
@@ -702,13 +708,13 @@ export default function AdminOrders() {
                         : "🚚 Delivery"}
                     </p>
 
-                    <p className="mt-1 text-sm text-gray-600">
+                    <p className="mt-1 text-sm text-zinc-400">
                       Pago:{" "}
                       {order.payment_method}
                     </p>
 
                     {order.order_time && (
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-zinc-400">
                         Hora:{" "}
                         {order.order_time}
                       </p>
@@ -716,11 +722,11 @@ export default function AdminOrders() {
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-zinc-500">
                       Total
                     </p>
 
-                    <p className="text-xl font-bold">
+                    <p className="text-xl font-bold text-white">
                       $
                       {order.total.toLocaleString(
                         "es-CL"
@@ -729,8 +735,8 @@ export default function AdminOrders() {
                   </div>
                 </div>
 
-                <div className="mt-6 border-t pt-5">
-                  <p className="mb-3 text-sm font-medium text-gray-500">
+                <div className="mt-6 border-t border-zinc-800 pt-5">
+                  <p className="mb-3 text-sm font-medium text-zinc-500">
                     Productos
                   </p>
 
@@ -739,10 +745,10 @@ export default function AdminOrders() {
                       (item) => (
                         <div
                           key={item.id}
-                          className="flex items-center justify-between rounded-xl bg-gray-50 p-3"
+                          className="flex items-center justify-between rounded-xl border border-zinc-800 bg-zinc-950 p-3"
                         >
                           <div>
-                            <p className="font-semibold">
+                            <p className="font-semibold text-zinc-100">
                               {item.quantity} ×{" "}
                               {
                                 item.product_name
@@ -750,14 +756,14 @@ export default function AdminOrders() {
                             </p>
 
                             {item.option && (
-                              <p className="text-sm text-gray-500">
+                              <p className="text-sm text-zinc-500">
                                 Opción:{" "}
                                 {item.option}
                               </p>
                             )}
                           </div>
 
-                          <p className="font-semibold">
+                          <p className="font-semibold text-zinc-200">
                             $
                             {(
                               item.unit_price *
@@ -772,12 +778,12 @@ export default function AdminOrders() {
                   </div>
                 </div>
 
-                <div className="mt-6 border-t pt-4">
-                  <p className="text-sm text-gray-500">
+                <div className="mt-6 border-t border-zinc-800 pt-4">
+                  <p className="text-sm text-zinc-500">
                     Recibido
                   </p>
 
-                  <p className="text-sm">
+                  <p className="text-sm text-zinc-300">
                     {new Date(
                       order.created_at
                     ).toLocaleString(
@@ -790,8 +796,8 @@ export default function AdminOrders() {
                   "cancelled" &&
                   order.status !==
                     "completed" && (
-                    <div className="mt-6 border-t pt-5">
-                      <p className="text-sm font-medium text-gray-500">
+                    <div className="mt-6 border-t border-zinc-800 pt-5">
+                      <p className="text-sm font-medium text-zinc-500">
                         Cambiar estado
                       </p>
 
@@ -805,7 +811,7 @@ export default function AdminOrders() {
                                 "preparing"
                               )
                             }
-                            className="rounded-xl bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-800 hover:bg-blue-200"
+                            className="rounded-xl border border-blue-800/60 bg-blue-950/60 px-4 py-2 text-sm font-semibold text-blue-300 transition hover:bg-blue-900/70"
                           >
                             🛠️ Aceptar y preparar
                           </button>
@@ -820,7 +826,7 @@ export default function AdminOrders() {
                                 "ready"
                               )
                             }
-                            className="rounded-xl bg-green-100 px-4 py-2 text-sm font-semibold text-green-800 hover:bg-green-200"
+                            className="rounded-xl border border-green-800/60 bg-green-950/60 px-4 py-2 text-sm font-semibold text-green-300 transition hover:bg-green-900/70"
                           >
                             ✅ Marcar como listo
                           </button>
@@ -835,7 +841,7 @@ export default function AdminOrders() {
                                 "completed"
                               )
                             }
-                            className="rounded-xl bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-200"
+                            className="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-semibold text-zinc-200 transition hover:bg-zinc-700"
                           >
                             🏪 Entregar pedido
                           </button>
@@ -848,7 +854,7 @@ export default function AdminOrders() {
                               "cancelled"
                             )
                           }
-                          className="rounded-xl bg-red-100 px-4 py-2 text-sm font-semibold text-red-800 hover:bg-red-200"
+                          className="rounded-xl border border-red-800/60 bg-red-950/60 px-4 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-900/70"
                         >
                           ❌ Cancelar
                         </button>
@@ -858,12 +864,12 @@ export default function AdminOrders() {
 
                 {order.status ===
                   "completed" && (
-                  <div className="mt-6 rounded-xl bg-gray-50 p-4">
-                    <p className="text-sm font-semibold text-gray-800">
+                  <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-950 p-4">
+                    <p className="text-sm font-semibold text-zinc-200">
                       Pedido completado
                     </p>
 
-                    <p className="mt-1 text-sm text-gray-600">
+                    <p className="mt-1 text-sm text-zinc-500">
                       El pedido fue entregado al cliente.
                     </p>
 
@@ -874,7 +880,7 @@ export default function AdminOrders() {
                           "cancelled"
                         )
                       }
-                      className="mt-3 rounded-xl bg-red-100 px-4 py-2 text-sm font-semibold text-red-800 hover:bg-red-200"
+                      className="mt-3 rounded-xl border border-red-800/60 bg-red-950/60 px-4 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-900/70"
                     >
                       ❌ Cancelar venta
                     </button>
@@ -883,12 +889,12 @@ export default function AdminOrders() {
 
                 {order.status ===
                   "cancelled" && (
-                  <div className="mt-6 rounded-xl bg-red-50 p-4">
-                    <p className="text-sm font-semibold text-red-800">
+                  <div className="mt-6 rounded-xl border border-red-900/60 bg-red-950/40 p-4">
+                    <p className="text-sm font-semibold text-red-300">
                       Venta cancelada
                     </p>
 
-                    <p className="mt-1 text-sm text-red-700">
+                    <p className="mt-1 text-sm text-red-200/70">
                       Esta venta se mantiene en el historial y
                       no puede volver a activarse.
                     </p>

@@ -320,14 +320,14 @@ export default function InventoryPage() {
 
   const getStockClass = (stock: number) => {
     if (stock === 0) {
-      return "font-bold text-red-600";
+      return "font-bold text-red-400";
     }
 
     if (stock <= 5) {
-      return "font-semibold text-orange-600";
+      return "font-semibold text-orange-400";
     }
 
-    return "font-semibold text-green-600";
+    return "font-semibold text-green-400";
   };
 
   const formatMovementDate = (date: string) => {
@@ -445,30 +445,36 @@ export default function InventoryPage() {
 
   if (loading) {
     return (
-      <main className="px-6 py-12">
+      <main className="min-h-screen bg-zinc-950 px-6 py-12 text-zinc-100">
         <div className="mx-auto max-w-6xl">
-          <p>Cargando inventario...</p>
+          <p className="text-zinc-400">
+            Cargando inventario...
+          </p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="px-6 py-12">
+    <main className="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-100 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-4xl font-bold">
+            <p className="text-sm font-semibold uppercase tracking-wider text-zinc-500">
+              Hanami Admin
+            </p>
+
+            <h1 className="mt-2 text-4xl font-bold tracking-tight text-white">
               Inventario
             </h1>
 
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-zinc-400">
               Administra el stock de los productos de Hanami.
             </p>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label className="mb-2 block text-sm font-medium text-zinc-400">
               Local
             </label>
 
@@ -477,12 +483,13 @@ export default function InventoryPage() {
               onChange={(event) => {
                 setLocationId(event.target.value);
               }}
-              className="rounded-xl border bg-white px-4 py-3 font-medium outline-none"
+              className="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 font-medium text-white outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-700"
             >
               {locations.map((location) => (
                 <option
                   key={location.id}
                   value={location.id}
+                  className="bg-zinc-900 text-white"
                 >
                   {location.name}
                 </option>
@@ -491,13 +498,13 @@ export default function InventoryPage() {
           </div>
         </div>
 
-        <div className="mt-6 flex items-center justify-between rounded-2xl bg-white p-5 shadow-sm">
+        <div className="mt-6 flex items-center justify-between rounded-2xl border border-zinc-800 bg-zinc-900 p-5 shadow-lg shadow-black/20">
           <div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-zinc-500">
               Inventario actual
             </p>
 
-            <p className="text-xl font-bold">
+            <p className="text-xl font-bold text-white">
               {currentLocation?.name}
             </p>
           </div>
@@ -507,20 +514,20 @@ export default function InventoryPage() {
               loadProducts();
               loadMovements();
             }}
-            className="rounded-full border px-5 py-2 font-medium hover:bg-gray-50"
+            className="rounded-xl border border-zinc-700 bg-zinc-950 px-5 py-2 font-medium text-zinc-200 transition hover:border-zinc-600 hover:bg-zinc-800"
           >
             Actualizar
           </button>
         </div>
 
         {error && (
-          <div className="mt-6 rounded-xl bg-red-50 p-4 text-red-700">
+          <div className="mt-6 rounded-xl border border-red-900/60 bg-red-950/40 p-4 text-red-300">
             {error}
           </div>
         )}
 
-        <div className="mt-8 overflow-hidden rounded-2xl border bg-white">
-          <div className="hidden grid-cols-[2fr_1fr_1fr_1.5fr_1fr] gap-4 bg-gray-50 px-6 py-4 text-sm font-semibold md:grid">
+        <div className="mt-8 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-lg shadow-black/20">
+          <div className="hidden grid-cols-[2fr_1fr_1fr_1.5fr_1fr] gap-4 border-b border-zinc-800 bg-zinc-950 px-6 py-4 text-sm font-semibold text-zinc-400 md:grid">
             <div>Producto</div>
             <div>Categoría</div>
             <div>Stock</div>
@@ -528,23 +535,23 @@ export default function InventoryPage() {
             <div>Estado</div>
           </div>
 
-          <div className="divide-y">
+          <div className="divide-y divide-zinc-800">
             {products.map((product) => (
               <div
                 key={product.id}
-                className="grid gap-4 px-6 py-5 md:grid-cols-[2fr_1fr_1fr_1.5fr_1fr] md:items-center"
+                className="grid gap-4 px-6 py-5 transition hover:bg-zinc-800/40 md:grid-cols-[2fr_1fr_1fr_1.5fr_1fr] md:items-center"
               >
                 <div>
-                  <div className="font-semibold">
+                  <div className="font-semibold text-zinc-100">
                     {product.name}
                   </div>
 
-                  <div className="mt-1 text-sm text-gray-500">
+                  <div className="mt-1 text-sm text-zinc-500">
                     ${product.price.toLocaleString("es-CL")}
                   </div>
                 </div>
 
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-zinc-400">
                   {product.category}
                 </div>
 
@@ -554,13 +561,13 @@ export default function InventoryPage() {
                   </span>
 
                   {product.stock === 0 && (
-                    <div className="mt-1 text-xs text-red-600">
+                    <div className="mt-1 text-xs text-red-400">
                       Sin stock
                     </div>
                   )}
 
                   {product.stock > 0 && product.stock <= 5 && (
-                    <div className="mt-1 text-xs text-orange-600">
+                    <div className="mt-1 text-xs text-orange-400">
                       Stock bajo
                     </div>
                   )}
@@ -572,12 +579,12 @@ export default function InventoryPage() {
                     onClick={() =>
                       openAdjustment(product, "decrease")
                     }
-                    className="h-10 w-10 rounded-xl border text-lg font-bold hover:bg-gray-50 disabled:opacity-50"
+                    className="h-10 w-10 rounded-xl border border-zinc-700 bg-zinc-950 text-lg font-bold text-zinc-200 transition hover:bg-zinc-800 disabled:opacity-50"
                   >
                     −
                   </button>
 
-                  <div className="flex h-10 w-20 items-center justify-center rounded-xl border bg-gray-50 font-semibold">
+                  <div className="flex h-10 w-20 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-950 font-semibold text-zinc-100">
                     {product.stock}
                   </div>
 
@@ -586,7 +593,7 @@ export default function InventoryPage() {
                     onClick={() =>
                       openAdjustment(product, "increase")
                     }
-                    className="h-10 w-10 rounded-xl border text-lg font-bold hover:bg-gray-50 disabled:opacity-50"
+                    className="h-10 w-10 rounded-xl border border-zinc-700 bg-zinc-950 text-lg font-bold text-zinc-200 transition hover:bg-zinc-800 disabled:opacity-50"
                   >
                     +
                   </button>
@@ -596,10 +603,10 @@ export default function InventoryPage() {
                   <button
                     disabled={saving === product.id}
                     onClick={() => toggleActive(product)}
-                    className={`rounded-full px-4 py-2 text-sm font-semibold ${
+                    className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
                       product.active
-                        ? "bg-green-100 text-green-700"
-                        : "bg-gray-200 text-gray-600"
+                        ? "border-green-800/60 bg-green-950/60 text-green-300 hover:bg-green-900/70"
+                        : "border-zinc-700 bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
                     }`}
                   >
                     {product.active
@@ -615,11 +622,11 @@ export default function InventoryPage() {
         <div className="mt-10">
           <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h2 className="text-2xl font-bold">
+              <h2 className="text-2xl font-bold text-white">
                 Historial de movimientos
               </h2>
 
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-sm text-zinc-500">
                 Últimos movimientos de inventario en{" "}
                 {currentLocation?.name}.
               </p>
@@ -628,7 +635,7 @@ export default function InventoryPage() {
             <button
               onClick={loadMovements}
               disabled={loadingMovements}
-              className="rounded-full border px-4 py-2 text-sm font-medium hover:bg-gray-50 disabled:opacity-50"
+              className="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-200 transition hover:bg-zinc-800 disabled:opacity-50"
             >
               {loadingMovements
                 ? "Cargando..."
@@ -636,9 +643,9 @@ export default function InventoryPage() {
             </button>
           </div>
 
-          <div className="mb-4 grid gap-3 rounded-2xl border bg-white p-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mb-4 grid gap-3 rounded-2xl border border-zinc-800 bg-zinc-900 p-4 md:grid-cols-2 lg:grid-cols-4">
             <div>
-              <label className="mb-2 block text-sm font-semibold">
+              <label className="mb-2 block text-sm font-semibold text-zinc-300">
                 Producto
               </label>
 
@@ -647,7 +654,7 @@ export default function InventoryPage() {
                 onChange={(event) =>
                   setMovementProductFilter(event.target.value)
                 }
-                className="w-full rounded-xl border bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-black/10"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-zinc-100 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-700"
               >
                 <option value="all">
                   Todos los productos
@@ -667,7 +674,7 @@ export default function InventoryPage() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-semibold">
+              <label className="mb-2 block text-sm font-semibold text-zinc-300">
                 Motivo
               </label>
 
@@ -676,7 +683,7 @@ export default function InventoryPage() {
                 onChange={(event) =>
                   setMovementReasonFilter(event.target.value)
                 }
-                className="w-full rounded-xl border bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-black/10"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-zinc-100 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-700"
               >
                 <option value="all">
                   Todos los motivos
@@ -694,7 +701,7 @@ export default function InventoryPage() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-semibold">
+              <label className="mb-2 block text-sm font-semibold text-zinc-300">
                 Desde
               </label>
 
@@ -705,12 +712,12 @@ export default function InventoryPage() {
                 onChange={(event) =>
                   setMovementFromDate(event.target.value)
                 }
-                className="w-full rounded-xl border bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-black/10"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-zinc-100 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-700"
               />
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-semibold">
+              <label className="mb-2 block text-sm font-semibold text-zinc-300">
                 Hasta
               </label>
 
@@ -721,20 +728,20 @@ export default function InventoryPage() {
                 onChange={(event) =>
                   setMovementToDate(event.target.value)
                 }
-                className="w-full rounded-xl border bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-black/10"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-zinc-100 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-700"
               />
             </div>
           </div>
 
           {hasMovementFilters && (
-            <div className="mb-4 flex flex-col gap-3 rounded-xl bg-gray-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm text-gray-600">
+            <div className="mb-4 flex flex-col gap-3 rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-zinc-400">
                 Mostrando{" "}
-                <span className="font-semibold">
+                <span className="font-semibold text-zinc-200">
                   {filteredMovements.length}
                 </span>{" "}
                 de{" "}
-                <span className="font-semibold">
+                <span className="font-semibold text-zinc-200">
                   {movements.length}
                 </span>{" "}
                 movimientos.
@@ -742,45 +749,45 @@ export default function InventoryPage() {
 
               <button
                 onClick={clearMovementFilters}
-                className="text-left text-sm font-semibold hover:underline sm:text-right"
+                className="text-left text-sm font-semibold text-zinc-300 transition hover:text-white hover:underline sm:text-right"
               >
                 Limpiar filtros
               </button>
             </div>
           )}
 
-          <div className="overflow-hidden rounded-2xl border bg-white">
+          <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-lg shadow-black/20">
             {loadingMovements ? (
-              <div className="p-6 text-gray-500">
+              <div className="p-6 text-zinc-500">
                 Cargando historial...
               </div>
             ) : filteredMovements.length === 0 ? (
-              <div className="p-6 text-gray-500">
+              <div className="p-6 text-zinc-500">
                 {movements.length === 0
                   ? "No hay movimientos registrados todavía."
                   : "No hay movimientos que coincidan con los filtros seleccionados."}
               </div>
             ) : (
               <>
-                <div className="hidden grid-cols-[2fr_1fr_1.5fr_1.5fr] gap-4 bg-gray-50 px-6 py-4 text-sm font-semibold md:grid">
+                <div className="hidden grid-cols-[2fr_1fr_1.5fr_1.5fr] gap-4 border-b border-zinc-800 bg-zinc-950 px-6 py-4 text-sm font-semibold text-zinc-400 md:grid">
                   <div>Producto</div>
                   <div>Cambio</div>
                   <div>Motivo</div>
                   <div>Fecha</div>
                 </div>
 
-                <div className="divide-y">
+                <div className="divide-y divide-zinc-800">
                   {filteredMovements.map((movement) => (
                     <div
                       key={movement.id}
-                      className="grid gap-3 px-6 py-4 md:grid-cols-[2fr_1fr_1.5fr_1.5fr] md:items-center"
+                      className="grid gap-3 px-6 py-4 transition hover:bg-zinc-800/40 md:grid-cols-[2fr_1fr_1.5fr_1.5fr] md:items-center"
                     >
                       <div>
-                        <div className="font-semibold">
+                        <div className="font-semibold text-zinc-100">
                           {movement.productName}
                         </div>
 
-                        <div className="mt-1 text-xs text-gray-400">
+                        <div className="mt-1 text-xs text-zinc-600">
                           {movement.productId}
                         </div>
                       </div>
@@ -788,8 +795,8 @@ export default function InventoryPage() {
                       <div
                         className={`font-bold ${
                           movement.quantityChange > 0
-                            ? "text-green-600"
-                            : "text-red-600"
+                            ? "text-green-400"
+                            : "text-red-400"
                         }`}
                       >
                         {movement.quantityChange > 0
@@ -797,11 +804,11 @@ export default function InventoryPage() {
                           : movement.quantityChange}
                       </div>
 
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-zinc-400">
                         {movement.reason}
                       </div>
 
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-zinc-500">
                         {formatMovementDate(
                           movement.createdAt
                         )}
@@ -816,15 +823,15 @@ export default function InventoryPage() {
       </div>
 
       {adjustingProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-3xl border border-zinc-800 bg-zinc-900 p-6 text-zinc-100 shadow-2xl shadow-black/50">
             <div className="flex items-start justify-between">
               <div>
-                <h2 className="text-2xl font-bold">
+                <h2 className="text-2xl font-bold text-white">
                   Ajustar inventario
                 </h2>
 
-                <p className="mt-1 text-gray-500">
+                <p className="mt-1 text-zinc-400">
                   {adjustingProduct.name}
                 </p>
               </div>
@@ -832,24 +839,24 @@ export default function InventoryPage() {
               <button
                 onClick={closeAdjustment}
                 disabled={Boolean(saving)}
-                className="text-2xl text-gray-400 hover:text-gray-700 disabled:opacity-50"
+                className="text-2xl text-zinc-600 transition hover:text-white disabled:opacity-50"
               >
                 ×
               </button>
             </div>
 
-            <div className="mt-6 rounded-2xl bg-gray-50 p-4">
-              <p className="text-sm text-gray-500">
+            <div className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
+              <p className="text-sm text-zinc-500">
                 Stock actual
               </p>
 
-              <p className="text-3xl font-bold">
+              <p className="text-3xl font-bold text-white">
                 {adjustingProduct.stock}
               </p>
             </div>
 
             <div className="mt-5">
-              <label className="mb-2 block text-sm font-semibold">
+              <label className="mb-2 block text-sm font-semibold text-zinc-300">
                 Cantidad
               </label>
 
@@ -859,18 +866,18 @@ export default function InventoryPage() {
                 onChange={(event) =>
                   setAdjustmentAmount(event.target.value)
                 }
-                className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-black/10"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-white outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-700"
                 placeholder="Ej: 5 o -2"
               />
 
-              <p className="mt-2 text-xs text-gray-500">
+              <p className="mt-2 text-xs text-zinc-500">
                 Usa un número positivo para agregar stock y uno
                 negativo para descontarlo.
               </p>
             </div>
 
             <div className="mt-5">
-              <label className="mb-2 block text-sm font-semibold">
+              <label className="mb-2 block text-sm font-semibold text-zinc-300">
                 Motivo
               </label>
 
@@ -879,7 +886,7 @@ export default function InventoryPage() {
                 onChange={(event) =>
                   setAdjustmentReason(event.target.value)
                 }
-                className="w-full rounded-xl border bg-white px-4 py-3 outline-none"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-white outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-700"
               >
                 {adjustmentReasons.map((reason) => (
                   <option
@@ -896,7 +903,7 @@ export default function InventoryPage() {
               <button
                 onClick={closeAdjustment}
                 disabled={Boolean(saving)}
-                className="flex-1 rounded-xl border px-4 py-3 font-semibold hover:bg-gray-50 disabled:opacity-50"
+                className="flex-1 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 font-semibold text-zinc-300 transition hover:bg-zinc-800 disabled:opacity-50"
               >
                 Cancelar
               </button>
@@ -904,7 +911,7 @@ export default function InventoryPage() {
               <button
                 onClick={confirmAdjustment}
                 disabled={Boolean(saving)}
-                className="flex-1 rounded-xl bg-black px-4 py-3 font-semibold text-white hover:bg-gray-800 disabled:opacity-50"
+                className="flex-1 rounded-xl bg-white px-4 py-3 font-semibold text-zinc-950 transition hover:bg-zinc-200 disabled:opacity-50"
               >
                 {saving
                   ? "Guardando..."
